@@ -17,7 +17,7 @@ import Neuron.Zettelkasten.Connection (Connection (..))
 import Neuron.Zettelkasten.ID (unsafeMkZettelID)
 import Neuron.Zettelkasten.Query.Parser (queryFromURILink)
 import Neuron.Zettelkasten.Zettel (ZettelQuery (..))
-import Reflex.Dom.Pandoc.URILink (URILink (URILink))
+import Reflex.Dom.Pandoc.ZURILink (ZURILink (ZURILink))
 import Relude
 import Test.Hspec
 import Text.Pandoc.Definition (Inline (Str))
@@ -84,7 +84,7 @@ spec = do
       queryFromURILink (normalLink "/static")
         `shouldBe` Nothing
 
-mkURILink :: Text -> Text -> URILink
+mkURILink :: Text -> Text -> ZURILink
 mkURILink =
   mkURILink' mkURI
 
@@ -92,9 +92,9 @@ mkURILink' ::
   (forall m. MonadThrow m => Text -> m URI) ->
   Text ->
   Text ->
-  URILink
+  ZURILink
 mkURILink' mk linkText s =
   -- TODO: Do this in reflex-dom-pandoc
   let uri = either (error . toText . displayException) id $ mk s
       inner = if linkText == s then Nothing else Just [Str linkText]
-   in URILink inner uri
+   in ZURILink inner uri
