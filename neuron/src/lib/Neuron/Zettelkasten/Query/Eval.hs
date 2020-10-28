@@ -38,7 +38,9 @@ runQueryURILink ::
   URI ->
   m (Maybe (DSum ZettelQuery Identity))
 runQueryURILink ul = do
-  let mq = queryFromURI OrdinaryConnection ul
+  -- TODO: Understand and document why the default *still* has to be Folgezettel?
+  -- Perhaps remove "?cf" and make "?branch" explicit
+  let mq = queryFromURI Folgezettel ul
   flip traverse mq $ \q ->
     either throwError pure =<< runExceptT (runSomeZettelQuery q)
 
